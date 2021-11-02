@@ -6,6 +6,12 @@ const { SAME_FILE, SAME_FUNC, IGNORE } = require('./types/const');
 const { isString, isObject } = require('./utils');
 
 const bcwVsBcmRule = require('./rules/brace-client-web-vs-brace-client-mobile');
+const bcwVsJcwRule = require('./rules/brace-client-web-vs-justnote-client-web');
+const bcwVsSasuRule = require('./rules/brace-client-web-vs-stacks-access-sign-up');
+const bcwVsSasiRule = require('./rules/brace-client-web-vs-stacks-access-sign-in');
+
+let countCompare;
+let countDiff;
 
 const includeLines = (lines, startLine, endLine) => {
   const i = lines.indexOf(startLine);
@@ -111,8 +117,7 @@ const getExcluded = (linesA, linesB, exclude) => {
   throw new Error(`Invalid exclude value: ${JSON.stringify(exclude)}`);
 };
 
-const compareSameFile = (linesA, linesB, rule, info) => {
-
+const _compareSameFile = (linesA, linesB, rule) => {
   if (rule.include) ({ linesA, linesB } = getIncluded(linesA, linesB, rule.include));
   if (rule.exclude) ({ linesA, linesB } = getExcluded(linesA, linesB, rule.exclude));
 
@@ -125,18 +130,107 @@ const compareSameFile = (linesA, linesB, rule, info) => {
       break;
     }
   }
+  return { diffA, diffB };
+};
 
+const compareSameFile = (linesA, linesB, rule, info) => {
+  const { diffA, diffB } = _compareSameFile(linesA, linesB, rule);
   if (diffA !== diffB) {
     console.log(`${info.dirA}`)
     console.log(`${info.nameA} v.s. ${info.nameB}`);
     console.log(`A: ${diffA}`);
     console.log(`B: ${diffB}`);
     console.log('----------------------------------------------------------------');
+    console.log('');
+
+    countDiff += 1;
   }
+  countCompare += 1;
 };
 
-const compareSameFunc = () => {
+const getFuncs = (lines) => {
+  const regex = /^(export ){0,1}const (.+) = .+ => {$/;
+  const funcs = {};
 
+  let funcName = null;
+  let funcLines = [];
+  for (const line of lines) {
+    const found = line.match(regex);
+    if (found) {
+      if (funcName) throw new Error(`Not null funcName: ${funcName}`);
+      funcName = found[2];
+    }
+
+    if (funcName) {
+      funcLines.push(line);
+
+      if (line === '};') {
+        funcs[funcName] = funcLines;
+
+        funcName = null;
+        funcLines = [];
+      }
+    }
+  }
+
+  return funcs;
+};
+
+const getFuncRule = (rule, funcName) => {
+  const _rule = {};
+  for (const k in rule) {
+    if (k === 'include') continue; // include for SAME_FUNC is different for SAME_FILE
+    if (k !== 'exclude') _rule[k] = rule[k];
+  }
+
+  if (rule.exclude) {
+    if (Array.isArray(rule.exclude)) {
+      _rule.exclude = rule.exclude.filter(_exclude => _exclude.name === funcName);
+    } else if (isObject(rule.exclude)) {
+      if (rule.exclude.name === funcName) _rule.exclude = rule.exclude;
+    } else throw new Error(`Invalid exclude value: ${JSON.stringify(rule.exclude)}`);
+  }
+
+  return _rule;
+};
+
+const compareSameFunc = (linesA, linesB, rule, info) => {
+  // include is an array of function names
+  //   meaning include only these function names.
+  // exclude needs to have attr:name as a function name
+  //   meaning exclude lines in this function name.
+
+  let funcsA = getFuncs(linesA);
+  let funcsB = getFuncs(linesB);
+
+  const funcNamesB = Object.keys(funcsB);
+  let funcNames = Object.keys(funcsA).filter(name => funcNamesB.includes(name));
+  if (rule.include) funcNames = funcNames.filter(name => rule.include.includes(name));
+
+  let hasDiff = false;
+  for (const funcName of funcNames) {
+    const _rule = getFuncRule(rule, funcName);
+    const { diffA, diffB } = _compareSameFile(funcsA[funcName], funcsB[funcName], _rule);
+    if (diffA !== diffB) {
+      if (!hasDiff) {
+        console.log(`${info.dirA}`)
+        console.log(`${info.nameA} v.s. ${info.nameB}`);
+      } else {
+        console.log('');
+      }
+      console.log(funcName);
+      console.log(`A: ${diffA}`);
+      console.log(`B: ${diffB}`);
+      hasDiff = true;
+    }
+  }
+
+  if (hasDiff) {
+    console.log('----------------------------------------------------------------');
+    console.log('');
+    countDiff += 1;
+  }
+  countCompare += 1;
 };
 
 const getCompared = (dirA, nameA, dirB, nameB, rule) => {
@@ -149,7 +243,7 @@ const getCompared = (dirA, nameA, dirB, nameB, rule) => {
   const info = { dirA, nameA, dirB, nameB };
 
   if (cRule.name === SAME_FILE) compareSameFile(linesA, linesB, cRule, info)
-  else if (cRule.name === SAME_FUNC) compareSameFunc();
+  else if (cRule.name === SAME_FUNC) compareSameFunc(linesA, linesB, cRule, info);
   else throw new Error(`Invalid compare rule: ${JSON.stringify(rule)}`);
 };
 
@@ -180,7 +274,7 @@ const _getMatched = (name, rule, sideName = 'nameA', oppName = 'nameB') => {
     }
   }
 
-  throw new Error(`Invalid rule: ${JSON.stringify(rule)}`);
+  throw new Error(`_getMatched error with name: ${name}, rule: ${JSON.stringify(rule)}, sideName: ${sideName}, oppName: ${oppName}.`);
 };
 
 const getMatched = (name, rule, sideName = 'nameA', oppName = 'nameB') => {
@@ -250,7 +344,15 @@ const traverse = (root) => {
 };
 
 const main = () => {
+  countCompare = 0;
+  countDiff = 0;
+
   traverse(bcwVsBcmRule);
+  traverse(bcwVsJcwRule);
+  traverse(bcwVsSasuRule);
+  traverse(bcwVsSasiRule);
+
+  console.log(`Finished ${countCompare} comparisons, ${countDiff} differences.`);
 };
 
 main();

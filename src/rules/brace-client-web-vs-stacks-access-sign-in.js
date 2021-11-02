@@ -18,6 +18,7 @@ const root = () => ({
         { name: '*', rule: IGNORE },
       ],
     },
+    { name: '*', rule: IGNORE },
   ],
 });
 

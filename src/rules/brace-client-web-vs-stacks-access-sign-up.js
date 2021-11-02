@@ -18,18 +18,6 @@ const root = () => ({
         ],
       },
     },
-    {
-      name: 'tailwind.css',
-      rule: {
-        name: SAME_FILE,
-        include: [
-          {
-            startLine: "  @font-face {",
-            endLine: "}",
-          },
-        ],
-      },
-    },
     { name: 'src', rule: srcRule() },
     { name: '*', rule: IGNORE },
   ],
@@ -63,6 +51,7 @@ const srcRule = () => ([
           },
         }
       },
+      { name: ['patterns.css', 'tailwind.css'], rule: IGNORE },
     ],
   },
   {

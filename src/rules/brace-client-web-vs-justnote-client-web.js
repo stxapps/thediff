@@ -4,7 +4,7 @@ const root = () => ({
   nameA: '~/Drive/Workspace/brace-client/packages/web',
   nameB: '~/Drive/Workspace/justnote-client/packages/web',
   rule: [
-    { name: 'bin', rule: { name: '*', rule: SAME_FILE } },
+    //{ name: 'bin', rule: { name: '*', rule: SAME_FILE } },
     { name: ['jsconfig.json', 'postcss.config.js', '.dir-locals.el'], rule: SAME_FILE },
     {
       name: 'tailwind.config.js',
@@ -53,7 +53,7 @@ const srcRule = () => ([
         nameB: 'data.js',
         rule: {
           name: SAME_FUNC,
-          funcNames: [
+          include: [
             'batchGetFileWithRetry', 'batchPutFileWithRetry', 'batchDeleteFileWithRetry',
           ],
           exclude: {
@@ -63,7 +63,8 @@ const srcRule = () => ([
           },
         },
       },
-      { name: 'wallet.js', rule: SAME_FILE },
+      { name: 'wallet.js', rule: /*SAME_FILE*/ IGNORE },
+      { name: ['customOffline.js', 'file.js'], rule: IGNORE },
     ],
   },
   {
@@ -83,7 +84,7 @@ const srcRule = () => ([
           ],
         },
       },
-      { name: ['patterns.css', 'tailwinds.css', 'ckeditor.css'], rule: IGNORE },
+      { name: ['patterns.css', 'tailwind.css', 'ckeditor.css'], rule: IGNORE },
     ],
   },
   {
@@ -126,8 +127,15 @@ const srcRule = () => ([
             {
               lineA: "  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
               startLineB: "  // Important - characters can't contain numbers",
-              endLineB: "  //   as this random string might append to timestamp.",
+              endLineB: "  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';",
               name: 'randomString',
+            },
+            {
+              startLineA: "export const isStringIn = (link, searchString) => {",
+              endLineA: "};",
+              startLineB: "export const isStringIn = (note, searchString) => {",
+              endLineB: "};",
+              name: 'isStringIn',
             },
           ]
         },
