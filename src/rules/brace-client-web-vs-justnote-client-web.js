@@ -131,9 +131,9 @@ const srcRule = () => ([
               name: 'randomString',
             },
             {
-              startLineA: "export const isStringIn = (link, searchString) => {",
+              startLineA: "const isStringIn = (link, searchString) => {",
               endLineA: "};",
-              startLineB: "export const isStringIn = (note, searchString) => {",
+              startLineB: "const isStringIn = (note, searchString) => {",
               endLineB: "};",
               name: 'isStringIn',
             },

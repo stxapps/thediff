@@ -33,6 +33,28 @@ const root = () => ({
 const srcRule = () => ([
   { name: 'index.js', rule: SAME_FILE },
   { name: ['components', 'utils'], rule: IGNORE },
+  {
+    name: 'stylesheets',
+    rule: [
+      { name: 'loading.css', rule: SAME_FILE },
+      { name: 'tailwind.css', rule: IGNORE },
+    ],
+  },
+  {
+    name: '@type',
+    rule: [
+      {
+        name: 'custom.d.ts',
+        rule: {
+          name: SAME_FILE,
+          exclude: {
+            lineA: "  StacksAccessSignUp?: any;",
+            lineB: "  StacksAccessSignIn?: any;",
+          }
+        },
+      },
+    ],
+  },
   { name: '*', rule: { name: '*', rule: SAME_FILE } },
 ]);
 

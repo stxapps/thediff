@@ -7,7 +7,13 @@ const root = () => ({
     { name: 'jsconfig.json', rule: SAME_FILE },
     {
       name: 'tailwind.config.js',
-      rule: { name: SAME_FILE, include: { startLine: "      colors: {", endLine: "        '51': '51'," } },
+      rule: {
+        name: SAME_FILE,
+        include: {
+          startLine: "      colors: {",
+          endLine: "        '51': '51',",
+        },
+      },
     },
     {
       name: 'tailwind.css',

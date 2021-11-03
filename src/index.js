@@ -5,10 +5,22 @@ const path = require('path');
 const { SAME_FILE, SAME_FUNC, IGNORE } = require('./types/const');
 const { isString, isObject } = require('./utils');
 
-const bcwVsBcmRule = require('./rules/brace-client-web-vs-brace-client-mobile');
-const bcwVsJcwRule = require('./rules/brace-client-web-vs-justnote-client-web');
-const bcwVsSasuRule = require('./rules/brace-client-web-vs-stacks-access-sign-up');
-const bcwVsSasiRule = require('./rules/brace-client-web-vs-stacks-access-sign-in');
+const rootRules = [
+  //require('./rules/brace-client-mobile-vs-blockstack-ios-classes.js'),
+  //require('./rules/brace-client-mobile-vs-blockstack-ios-js.js'),
+  //require('./rules/brace-client-mobile-vs-blockstack-ios-js-bridge.js'),
+  require('./rules/brace-client-mobile-vs-justnote-client-mobile.js'),
+  require('./rules/brace-client-web-vs-brace-client-mobile.js'),
+  require('./rules/brace-client-web-vs-brace-server.js'),
+  require('./rules/brace-client-web-vs-justnote-client-web.js'),
+  require('./rules/brace-client-web-vs-stacks-access-sign-in.js'),
+  require('./rules/brace-client-web-vs-stacks-access-sign-up.js'),
+  require('./rules/brace-extensions-chrome-vs-brace-extensions-firefox.js'),
+  require('./rules/brace-server-vs-brace-server-worker.js'),
+  require('./rules/justnote-client-web-vs-justnote-client-mobile.js'),
+  require('./rules/justnote-client-web-vs-justnote-editor.js'),
+  require('./rules/stacks-access-sign-up-vs-stacks-access-sign-in.js'),
+];
 
 let countCompare;
 let countDiff;
@@ -136,20 +148,23 @@ const _compareSameFile = (linesA, linesB, rule) => {
 const compareSameFile = (linesA, linesB, rule, info) => {
   const { diffA, diffB } = _compareSameFile(linesA, linesB, rule);
   if (diffA !== diffB) {
-    console.log(`${info.dirA}`)
-    console.log(`${info.nameA} v.s. ${info.nameB}`);
+    console.log('');
+    console.log(`${info.dirA}/${info.nameA}`)
+    console.log('v.s.')
+    console.log(`${info.dirB}/${info.nameB}`)
     console.log(`A: ${diffA}`);
     console.log(`B: ${diffB}`);
-    console.log('----------------------------------------------------------------');
     console.log('');
-
+    console.log('----------------------------------------------------------------');
     countDiff += 1;
   }
   countCompare += 1;
 };
 
 const getFuncs = (lines) => {
-  const regex = /^(export ){0,1}const (.+) = .+ => {$/;
+  //Need to also detect a function on multiple lines
+  //const regex = /^(export ){0,1}const (.+) = .+ => {$/;
+  const regex = /^(export ){0,1}const (.+) = \(/;
   const funcs = {};
 
   let funcName = null;
@@ -158,13 +173,17 @@ const getFuncs = (lines) => {
     const found = line.match(regex);
     if (found) {
       if (funcName) throw new Error(`Not null funcName: ${funcName}`);
+
       funcName = found[2];
+      funcLines.push(found[1] ? line.slice(found[1].length) : line);
+      // Ignore 'export ' if exists, in exclude line value, need to not have it too!
+      continue;
     }
 
     if (funcName) {
       funcLines.push(line);
 
-      if (line === '};') {
+      if (line === '};' || line === ']) || a;') {
         funcs[funcName] = funcLines;
 
         funcName = null;
@@ -176,6 +195,28 @@ const getFuncs = (lines) => {
   return funcs;
 };
 
+const _getFuncRuleExclude = (exclude, funcName) => {
+  if (Array.isArray(exclude.name)) {
+    return exclude.name.includes(funcName) ? exclude : null;
+  }
+
+  if (isString(exclude.name)) {
+    return exclude.name === funcName ? exclude : null;
+  }
+
+  throw new Error(`Invalid exclude value: ${JSON.stringify(exclude)}`);
+};
+
+const getFuncRuleExclude = (exclude, funcName) => {
+  if (Array.isArray(exclude)) {
+    return exclude.filter(_exclude => _getFuncRuleExclude(_exclude, funcName) !== null);
+  }
+
+  if (isObject(exclude)) return _getFuncRuleExclude(exclude, funcName);
+
+  throw new Error(`Invalid exclude value: ${JSON.stringify(exclude)}`);
+}
+
 const getFuncRule = (rule, funcName) => {
   const _rule = {};
   for (const k in rule) {
@@ -183,15 +224,21 @@ const getFuncRule = (rule, funcName) => {
     if (k !== 'exclude') _rule[k] = rule[k];
   }
 
-  if (rule.exclude) {
-    if (Array.isArray(rule.exclude)) {
-      _rule.exclude = rule.exclude.filter(_exclude => _exclude.name === funcName);
-    } else if (isObject(rule.exclude)) {
-      if (rule.exclude.name === funcName) _rule.exclude = rule.exclude;
-    } else throw new Error(`Invalid exclude value: ${JSON.stringify(rule.exclude)}`);
-  }
+  if (rule.exclude) _rule.exclude = getFuncRuleExclude(rule.exclude, funcName);
 
   return _rule;
+};
+
+const doExcludeWholeFunc = (exclude) => {
+  if (Array.isArray(exclude)) {
+    if (exclude.length === 1) exclude = exclude[0];
+    else return false;
+  }
+  if (isObject(exclude)) {
+    const ks = Object.keys(exclude);
+    return ks.length === 1 && ks.includes('name');
+  }
+  throw new Error(`Invalid exclude value: ${JSON.stringify(exclude)}`);
 };
 
 const compareSameFunc = (linesA, linesB, rule, info) => {
@@ -210,11 +257,14 @@ const compareSameFunc = (linesA, linesB, rule, info) => {
   let hasDiff = false;
   for (const funcName of funcNames) {
     const _rule = getFuncRule(rule, funcName);
+    if (_rule.exclude && doExcludeWholeFunc(_rule.exclude)) continue;
     const { diffA, diffB } = _compareSameFile(funcsA[funcName], funcsB[funcName], _rule);
     if (diffA !== diffB) {
       if (!hasDiff) {
-        console.log(`${info.dirA}`)
-        console.log(`${info.nameA} v.s. ${info.nameB}`);
+        console.log('');
+        console.log(`${info.dirA}/${info.nameA}`)
+        console.log('v.s.')
+        console.log(`${info.dirB}/${info.nameB}`)
       } else {
         console.log('');
       }
@@ -226,8 +276,8 @@ const compareSameFunc = (linesA, linesB, rule, info) => {
   }
 
   if (hasDiff) {
-    console.log('----------------------------------------------------------------');
     console.log('');
+    console.log('----------------------------------------------------------------');
     countDiff += 1;
   }
   countCompare += 1;
@@ -347,10 +397,7 @@ const main = () => {
   countCompare = 0;
   countDiff = 0;
 
-  traverse(bcwVsBcmRule);
-  traverse(bcwVsJcwRule);
-  traverse(bcwVsSasuRule);
-  traverse(bcwVsSasiRule);
+  for (const rootRule of rootRules) traverse(rootRule);
 
   console.log(`Finished ${countCompare} comparisons, ${countDiff} differences.`);
 };
