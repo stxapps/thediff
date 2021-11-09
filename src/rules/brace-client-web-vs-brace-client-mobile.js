@@ -69,7 +69,7 @@ const srcRule = () => ([
   { name: 'reducers', rule: [{ name: '*', rule: SAME_FILE }] },
   { name: 'selectors', rule: [{ name: 'index.js', rule: SAME_FILE }] },
   {
-    name: '@type',
+    name: '@types',
     rule: [
       { name: ['custom.d.ts', 'react-redux.d.ts'], rule: SAME_FILE },
     ],

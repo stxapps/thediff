@@ -41,7 +41,7 @@ const srcRule = () => ([
     ],
   },
   {
-    name: '@type',
+    name: '@types',
     rule: [
       {
         name: 'custom.d.ts',

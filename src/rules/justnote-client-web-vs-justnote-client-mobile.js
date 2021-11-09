@@ -48,6 +48,10 @@ const srcRule = () => ([
               lineB: "      mmkvStorage.getFile(fpath)",
             },
             {
+              lineA: "        console.log('batchGetFileWithRetry error: ', failedResponses[0].error);",
+              lineB: "        console.log('data/batchGetFileWithRetry error: ', failedResponses[0].error);",
+            },
+            {
               lineA: "    if (fpath.endsWith(INDEX + DOT_JSON)) content = JSON.parse(content);",
               lineB: "",
             },
@@ -103,6 +107,11 @@ const srcRule = () => ([
           name: SAME_FUNC,
           exclude: [
             {
+              lineA: "        console.log('batchGetFileWithRetry error: ', failedResponses[0].error);",
+              lineB: "        console.log('server/batchGetFileWithRetry error: ', failedResponses[0].error);",
+              name: 'batchGetFileWithRetry',
+            },
+            {
               lineA: "      userSession.putFile(fpath, contents[i], { dangerouslyIgnoreEtag: true })",
               lineB: "      userSession.putFile(fpath, contents[i])",
               name: 'batchPutFileWithRetry',
@@ -123,7 +132,7 @@ const srcRule = () => ([
   { name: 'reducers', rule: [{ name: '*', rule: SAME_FILE }] },
   { name: 'selectors', rule: [{ name: 'index.js', rule: SAME_FILE }] },
   {
-    name: '@type',
+    name: '@types',
     rule: [
       { name: ['custom.d.ts', 'react-redux.d.ts'], rule: SAME_FILE },
     ],
@@ -150,8 +159,8 @@ const actionsIndexJsRule = () => ({
   exclude: [
     {
       name: [
-        'init', 'handlePendingSignIn', 'handleScreenRotation',
-        'sync', 'tryUpdateSynced', 'updateSynced',
+        'init', 'handlePendingSignIn', 'handleScreenRotation', 'signOut',
+        'updateUserData', 'sync', 'tryUpdateSynced', 'updateSynced',
       ],
     },
     {

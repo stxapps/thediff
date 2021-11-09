@@ -164,7 +164,7 @@ const compareSameFile = (linesA, linesB, rule, info) => {
 const getFuncs = (lines) => {
   //Need to also detect a function on multiple lines
   //const regex = /^(export ){0,1}const (.+) = .+ => {$/;
-  const regex = /^(export ){0,1}const (.+) = \(/;
+  const regex = /^(export ){0,1}const (.+) = (async ){0,1}\(/;
   const funcs = {};
 
   let funcName = null;
@@ -250,9 +250,20 @@ const compareSameFunc = (linesA, linesB, rule, info) => {
   let funcsA = getFuncs(linesA);
   let funcsB = getFuncs(linesB);
 
+  const funcNamesA = Object.keys(funcsA);
   const funcNamesB = Object.keys(funcsB);
-  let funcNames = Object.keys(funcsA).filter(name => funcNamesB.includes(name));
+  let funcNames = funcNamesA.filter(name => funcNamesB.includes(name));
   if (rule.include) funcNames = funcNames.filter(name => rule.include.includes(name));
+
+  if (funcNames.length === 0) {
+    console.log('');
+    console.log(`${info.dirA}/${info.nameA}`)
+    console.log('v.s.')
+    console.log(`${info.dirB}/${info.nameB}`)
+    console.log('No function to compare! Something\'s wrong?');
+    console.log('');
+    console.log('----------------------------------------------------------------');
+  }
 
   let hasDiff = false;
   for (const funcName of funcNames) {
@@ -274,12 +285,12 @@ const compareSameFunc = (linesA, linesB, rule, info) => {
       hasDiff = true;
     }
   }
-
   if (hasDiff) {
     console.log('');
     console.log('----------------------------------------------------------------');
     countDiff += 1;
   }
+
   countCompare += 1;
 };
 
