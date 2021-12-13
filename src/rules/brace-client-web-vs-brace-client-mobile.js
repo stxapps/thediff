@@ -1,4 +1,4 @@
-const { SAME_FILE, IGNORE } = require('../types/const');
+const { SAME_FILE, SAME_FUNC, IGNORE } = require('../types/const');
 
 const root = () => ({
   nameA: '~/Drive/Workspace/brace-client/packages/web',
@@ -66,6 +66,19 @@ const srcRule = () => ([
       { name: 'wallet.js', rule: IGNORE },
     ],
   },
+  {
+    name: 'components',
+    rule: [
+      {
+        name: 'MenuPopupRenderer.js',
+        rule: {
+          name: SAME_FUNC,
+          include: ['axisPosition', 'computePosition'],
+        },
+      },
+      { name: '*', rule: IGNORE },
+    ],
+  },
   { name: 'reducers', rule: [{ name: '*', rule: SAME_FILE }] },
   { name: 'selectors', rule: [{ name: 'index.js', rule: SAME_FILE }] },
   {
@@ -77,7 +90,7 @@ const srcRule = () => ([
   {
     name: 'types',
     rule: [
-      { name: ['actionTypes.js', 'const.js'], rule: SAME_FILE },
+      { name: ['actionTypes.js', 'const.js', 'initialStates.js'], rule: SAME_FILE },
       { name: ['animConfigs.js', 'imagePaths.js', 'patternPaths.js'], rule: IGNORE },
     ],
   },

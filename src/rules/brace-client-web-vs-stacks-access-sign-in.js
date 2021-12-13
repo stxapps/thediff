@@ -7,7 +7,7 @@ const root = () => ({
     {
       name: 'components',
       rule: [
-        { name: 'SignIn.js', rule: compomentSignInRule() },
+        { name: 'SignIn.js', rule: componentSignInRule() },
         { name: '*', rule: IGNORE },
       ],
     },
@@ -22,7 +22,7 @@ const root = () => ({
   ],
 });
 
-const compomentSignInRule = () => ({
+const componentSignInRule = () => ({
   name: SAME_FILE,
   exclude: [
     {

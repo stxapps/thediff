@@ -34,7 +34,7 @@ const srcRule = () => ([
   {
     name: 'components',
     rule: [
-      { name: 'SignUp.js', rule: compomentSignUpRule() },
+      { name: 'SignUp.js', rule: componentSignUpRule() },
       { name: '*', rule: IGNORE },
     ],
   },
@@ -78,7 +78,7 @@ const srcRule = () => ([
   { name: '*', rule: IGNORE },
 ]);
 
-const compomentSignUpRule = () => ({
+const componentSignUpRule = () => ({
   name: SAME_FILE,
   exclude: [
     {

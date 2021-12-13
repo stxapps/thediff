@@ -129,6 +129,19 @@ const srcRule = () => ([
       { name: 'wallet.js', rule: IGNORE },
     ],
   },
+  {
+    name: 'components',
+    rule: [
+      {
+        name: 'MenuPopupRenderer.js',
+        rule: {
+          name: SAME_FUNC,
+          include: ['axisPosition', 'computePosition', 'getOriginClassName'],
+        },
+      },
+      { name: '*', rule: IGNORE },
+    ],
+  },
   { name: 'reducers', rule: [{ name: '*', rule: SAME_FILE }] },
   { name: 'selectors', rule: [{ name: 'index.js', rule: SAME_FILE }] },
   {
@@ -324,6 +337,11 @@ const actionsIndexJsRule = () => ({
       lineA: "    dataApi.deleteFiles(serverUnusedFPaths);",
       lineB: "",
       name: 'mergeNotes',
+    },
+    {
+      lineA: "  updatePopupUrlHash(SETTINGS_POPUP, isShown, null);",
+      lineB: "  dispatch(updatePopup(SETTINGS_POPUP, isShown, null));",
+      name: 'updateSettingsPopup',
     },
     {
       startLineA: "    // Export only index.json and settings.json so safe to JSON.parse all responses.",
