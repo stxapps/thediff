@@ -12,28 +12,16 @@ const root = () => ({
         name: SAME_FILE,
         exclude: [
           {
-            startLine: "        green: colors.green,",
+            lineA: "const colors = require('tailwindcss/colors');",
+            lineB: "",
+          },
+          {
+            lineA: "  purge: [",
+            lineB: "  content: [",
+          },
+          {
+            startLine: "        sans: ['Inter', ...defaultTheme.fontFamily.sans],",
             endLine: "  plugins: [",
-          },
-        ],
-      },
-    },
-    {
-      name: 'tailwind.css',
-      rule: {
-        name: SAME_FILE,
-        include: [
-          {
-            startLine: "@tailwind base;",
-            endLine: "    -webkit-appearance:none;",
-          },
-          {
-            startLine: "  @font-face {",
-            endLine: "}",
-          },
-          {
-            startLine: "  .e-mail:before {",
-            endLine: "  }",
           },
         ],
       },
@@ -330,6 +318,26 @@ const srcRule = () => ([
           ],
         },
       },
+      /*{
+        name: 'tailwind.css',
+        rule: {
+          name: SAME_FILE,
+          include: [
+            {
+              startLine: "@tailwind base;",
+              endLine: "    -webkit-appearance:none;",
+            },
+            {
+              startLine: "  @font-face {",
+              endLine: "}",
+            },
+            {
+              startLine: "  .e-mail:before {",
+              endLine: "  }",
+            },
+          ],
+        },
+      },*/
       { name: ['patterns.css', 'tailwind.css', 'ckeditor.css'], rule: IGNORE },
     ],
   },
@@ -387,6 +395,7 @@ const srcRule = () => ([
         },
       },
       { nameA: 'index.js', nameB: 'obj.js', rule: SAME_FUNC },
+      { name: 'index-web.js', rule: IGNORE },
     ],
   },
   { name: '*', rule: IGNORE },

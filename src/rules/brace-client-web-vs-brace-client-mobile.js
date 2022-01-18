@@ -122,10 +122,16 @@ const actionsIndexJsRule = () => ({
       lineB: "      { headers: { Referer: DOMAIN_NAME } }",
     },
     {
-      startLineA: "    var blob = new Blob([JSON.stringify(data)], { type: 'text/plain;charset=utf-8' });",
-      endLineA: "    saveAs(blob, 'brace-data.txt');",
-      startLineB: "    // This will write the file to an app directory, not shared.",
-      endLineB: "    //await RNFS.writeFile(path, JSON.stringify(data), 'utf8');",
+      startLineA: "const importAllDataLoop = async (dispatch, fpaths, contents) => {",
+      endLineA: "export const updateImportAllDataProgress = (progress) => {",
+      startLineB: "export const importAllData = () => async (dispatch, getState) => {",
+      endLineB: "export const updateImportAllDataProgress = (progress) => {",
+    },
+    {
+      startLineA: "const exportAllDataLoop = async (dispatch, fPaths, doneCount) => {",
+      endLineA: "export const updateExportAllDataProgress = (progress) => {",
+      startLineB: "export const exportAllData = () => async (dispatch, getState) => {",
+      endLineB: "export const updateExportAllDataProgress = (progress) => {",
     },
   ],
 });

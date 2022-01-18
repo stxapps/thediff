@@ -10,7 +10,7 @@ const root = () => ({
       rule: {
         name: SAME_FILE,
         include: {
-          startLine: "      colors: {",
+          startLine: "      minWidth: {",
           endLine: "        '64': '16rem',",
         },
       },
@@ -87,8 +87,8 @@ const srcRule = () => ([
               endLineB: "const data = {",
             },
             {
-              lineA: "  getFiles, putFiles, deleteFiles,",
-              lineB: "  getFiles, putFiles, deleteFiles, deleteAllFiles,",
+              lineA: "  canDeleteListNames, getFiles, putFiles, deleteFiles,",
+              lineB: "  canDeleteListNames, getFiles, putFiles, deleteFiles, deleteAllFiles,",
             },
           ],
         },
@@ -161,7 +161,7 @@ const srcRule = () => ([
     name: 'utils',
     rule: [
       { name: ['index.js', 'obj.js'], rule: SAME_FILE },
-      { name: 'cache.js', rule: IGNORE },
+      { name: ['index-web.js', 'cache.js'], rule: IGNORE },
     ],
   },
   { name: '*', rule: IGNORE },
@@ -174,6 +174,7 @@ const actionsIndexJsRule = () => ({
       name: [
         'init', 'handlePendingSignIn', 'handleScreenRotation', 'signOut',
         'updateUserData', 'sync', 'tryUpdateSynced', 'updateSynced',
+        'importAllData', 'exportAllData',
       ],
     },
     {
@@ -342,20 +343,6 @@ const actionsIndexJsRule = () => ({
       lineA: "  updatePopupUrlHash(SETTINGS_POPUP, isShown, null);",
       lineB: "  dispatch(updatePopup(SETTINGS_POPUP, isShown, null));",
       name: 'updateSettingsPopup',
-    },
-    {
-      startLineA: "    // Export only index.json and settings.json so safe to JSON.parse all responses.",
-      endLineA: "    return { path: response.fpath, data: JSON.parse(response.content) };",
-      startLineB: "    // Export only index.json and settings.json so safe to not JSON.parse all responses.",
-      endLineB: "    return { path: response.fpath, data: response.content };",
-      name: 'exportAllDataLoop',
-    },
-    {
-      startLineA: "    var blob = new Blob([JSON.stringify(data)], { type: 'text/plain;charset=utf-8' });",
-      endLineA: "    saveAs(blob, 'justnote-data.txt');",
-      startLineB: "    //var blob = new Blob([JSON.stringify(data)], { type: 'text/plain;charset=utf-8' });",
-      endLineB: "    //saveAs(blob, 'justnote-data.txt');",
-      name: 'exportAllData',
     },
     {
       startLine: "  dispatch(updateDeleteAllDataProgress({ total: 'calculating...', done: 0 }));",

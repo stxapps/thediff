@@ -4,7 +4,13 @@ const root = () => ({
   nameA: '~/Drive/Workspace/brace-client/packages/web',
   nameB: '~/Drive/Workspace/stacks-access-in-webview/sign-up',
   rule: [
-    { name: 'bin', rule: { name: 'patch.js', rule: SAME_FUNC } },
+    {
+      name: 'bin',
+      rule: [
+        { name: 'patch.js', rule: SAME_FUNC },
+        { name: 'copy-hard-coding.sh', rule: IGNORE },
+      ],
+    },
     { name: ['jsconfig.json', 'postcss.config.js', '.dir-locals.el'], rule: SAME_FILE },
     {
       name: 'tailwind.config.js',
