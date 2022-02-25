@@ -110,7 +110,7 @@ const actionsIndexJsRule = () => ({
     {
       startLineA: "import { RESET_STATE as OFFLINE_RESET_STATE } from '@redux-offline/redux-offline/lib/constants';",
       endLineA: "export const updatePopup = (id, isShown, anchorPosition = null) => {",
-      startLineB: "import { Linking, Dimensions, Platform } from 'react-native';",
+      startLineB: "import { Linking, AppState, Platform } from 'react-native';",
       endLineB: "export const updatePopup = (id, isShown, anchorPosition = null) => {",
     },
     {
