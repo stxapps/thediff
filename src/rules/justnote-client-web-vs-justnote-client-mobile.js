@@ -87,8 +87,8 @@ const srcRule = () => ([
               endLineB: "const data = {",
             },
             {
-              lineA: "  canDeleteListNames, getFiles, putFiles, deleteFiles,",
-              lineB: "  canDeleteListNames, getFiles, putFiles, deleteFiles, deleteAllFiles,",
+              lineA: "  putFiles, deleteFiles,",
+              lineB: "  putFiles, deleteFiles, deleteAllFiles,",
             },
           ],
         },
