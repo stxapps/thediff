@@ -92,14 +92,6 @@ const srcRule = () => ([
               lineB: "  SETTINGS_LISTS_MENU_POPUP, LIST_NAMES_POPUP, MY_NOTES, TRASH, ARCHIVE, MODE_EDIT,",
             },
             {
-              lineA: "import { popupBgFMV, getPopupFMV } from '../types/animConfigs';",
-              lineB: "import { popupBgFMV, popupFMV } from '../types/animConfigs';",
-            },
-            {
-              lineA: "import { computePosition, createLayouts } from './MenuPopupRenderer';",
-              lineB: "import { computePosition, createLayouts, getOriginClassName } from './MenuPopupRenderer';",
-            },
-            {
               lineA: "    dispatch(updatePopup(SETTINGS_LISTS_MENU_POPUP, false, null));",
               lineB: "    updatePopupUrlHash(SETTINGS_LISTS_MENU_POPUP, false, null);",
             },
@@ -112,15 +104,11 @@ const srcRule = () => ([
               lineB: '      {![MY_NOTES, TRASH, ARCHIVE].includes(selectingListName) && <button onClick={onDeleteBtnClick} className="group w-full flex items-center px-4 py-3 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">',
             },
             {
-              lineA: "  let popupClassNames = 'fixed w-36 mt-1 rounded-md shadow-xl bg-white overflow-auto ring-1 ring-black ring-opacity-5 z-41';",
-              lineB: "  let popupClassNames = 'fixed w-36 mt-1 rounded-md shadow-xl bg-white overflow-auto ring-1 ring-black ring-opacity-5';",
+              lineA: "  let popupClassNames = 'fixed w-36 rounded-lg bg-white overflow-auto shadow-xl ring-1 ring-black ring-opacity-5 z-41';",
+              lineB: "  let popupClassNames = 'fixed w-36 rounded-md shadow-xl bg-white overflow-auto ring-1 ring-black ring-opacity-5';",
             },
             {
-              startLine: "    const popupStyle = { top, left, maxHeight };",
-              endLine: "    panel = (",
-            },
-            {
-              lineA: '      <motion.button key="SLMP_cancelBtn" ref={cancelBtn} onClick={onCancelBtnClick} className="fixed inset-0 w-full h-full bg-black opacity-25 cursor-default z-40 focus:outline-none" variants={popupBgFMV} initial="hidden" animate="visible" exit="hidden" />',
+              lineA: '      <motion.button key="SLMP_cancelBtn" ref={cancelBtn} onClick={onCancelBtnClick} className="fixed inset-0 w-full h-full bg-black bg-opacity-25 cursor-default z-40 focus:outline-none" variants={popupBgFMV} initial="hidden" animate="visible" exit="hidden" />',
               lineB: '      <motion.button key="SLMP_cancelBtn" ref={cancelBtn} onClick={onCancelBtnClick} className="fixed inset-0 w-full h-full bg-black bg-opacity-25 cursor-default focus:outline-none" variants={popupBgFMV} initial="hidden" animate="visible" exit="hidden" />',
             },
           ],
@@ -140,16 +128,8 @@ const srcRule = () => ([
               lineB: "  updateDeletingListName, updateListNameEditors, updatePopupUrlHash,",
             },
             {
-              lineA: "import { spListsFMV } from '../types/animConfigs';",
-              lineB: "import { listsFMV } from '../types/animConfigs';",
-            },
-            {
               lineA: '          <span className="text-sm text-gray-500 rounded group-focus:ring">{\'<\'} <span className="group-hover:underline">Settings</span></span>',
               lineB: '          <span className="text-sm text-gray-500 rounded-sm group-focus:ring-2 group-focus:ring-gray-400">{\'<\'} <span className="group-hover:underline">Settings</span></span>',
-            },
-            {
-              lineA: '                <motion.div key={listNameObj.listName} layoutId={listNameObj.listName} variants={spListsFMV} initial="hidden" animate="visible" exit="exit">',
-              lineB: '                <motion.div key={listNameObj.listName} layoutId={listNameObj.listName} variants={listsFMV} initial="hidden" animate="visible" exit="exit">',
             },
             {
               lineA: "    dispatch(updatePopup(SETTINGS_LISTS_MENU_POPUP, true, rect));",
@@ -190,6 +170,58 @@ const srcRule = () => ([
             {
               lineA: '          <svg style={{ width: \'1.2rem\', height: \'1.2rem\' }} className="text-gray-500 rounded-sm group-hover:text-gray-600 group-focus:ring group-focus:ring-offset-4" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">',
               lineB: '          <svg style={{ width: \'1.2rem\', height: \'1.2rem\' }} className="text-gray-500 rounded-sm group-hover:text-gray-600 group-focus:ring-2 group-focus:ring-offset-4 group-focus:ring-gray-400" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">',
+            },
+          ],
+        },
+      },
+      {
+        name: 'SettingsPopupIap.js',
+        rule: {
+          name: SAME_FILE,
+          exclude: [
+            {
+              lineA: `          <span className="text-sm text-gray-500 rounded group-focus:ring">{'<'} <span className="group-hover:underline">Settings</span></span>`,
+              lineB: `          <span className="text-sm text-gray-500 rounded-sm group-focus:ring-2 group-focus:ring-gray-400">{'<'} <span className="group-hover:underline">Settings</span></span>`,
+            },
+            {
+              startLine: '      <h4 className="text-base text-gray-800 font-medium leading-none">Purchase subscription</h4>',
+              endLine: '    </div>',
+            },
+            {
+              lineA: '      <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noreferrer">App Store</a>',
+              lineB: '      <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href="https://apps.apple.com/account/subscriptions" target="_blank" rel="noreferrer">App Store</a>',
+            },
+            {
+              lineA: '      <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href="https://play.google.com/store/account/subscriptions?sku=com.bracedotto.supporter&package=com.bracedotto" target="_blank" rel="noreferrer">Google Play</a>',
+              lineB: '      <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href="https://play.google.com/store/account/subscriptions?sku=com.justnotecc.supporter&package=com.justnotecc" target="_blank" rel="noreferrer">Google Play</a>',
+            },
+            {
+              lineA: `    <p className="mt-6 text-base text-gray-500 leading-relaxed">{isUnknown ? 'Please wait a moment and try' : 'If your subscription is not up to date, try'} <button onClick={onRefreshBtnClick} className="underline rounded hover:text-gray-700 focus:outline-none focus:ring">Refresh purchases</button>.</p>`,
+              lineB: `    <p className="mt-6 text-base text-gray-500 leading-relaxed">{isUnknown ? 'Please wait a moment and try' : 'If your subscription is not up to date, try'} <button onClick={onRefreshBtnClick} className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400">Refresh purchases</button>.</p>`,
+            },
+            {
+              lineA: `      <p className="mt-6 text-base text-gray-500 leading-relaxed">{isUnknown ? 'If the problem persists' : 'If you have any question'}, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+              lineB: `      <p className="mt-6 text-base text-gray-500 leading-relaxed">{isUnknown ? 'If the problem persists' : 'If you have any question'}, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+            },
+            {
+              lineA: '      <button onClick={onRestoreBtnClick} type="button" className="mt-7 mb-4 px-3.5 py-1.5 block bg-white text-sm text-gray-500 border border-gray-400 rounded-full hover:text-gray-600 hover:border-gray-500 focus:outline-none focus:ring">',
+              lineB: '      <button onClick={onRestoreBtnClick} type="button" className="mt-7 mb-4 px-2 py-2 block border border-gray-300 text-sm text-gray-500 rounded-md bg-white shadow-sm hover:text-gray-600 hover:border-gray-400 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">',
+            },
+            {
+              lineA: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">Please try to restore purchases in our <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href={'/' + HASH_LANDING_MOBILE} target="_blank" rel="noreferrer">Mobile apps</a> where you've made the purchase.</p>`,
+              lineB: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">Please try to restore purchases in our <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href={'/' + HASH_LANDING_MOBILE} target="_blank" rel="noreferrer">Mobile apps</a> where you've made the purchase.</p>`,
+            },
+            {
+              lineA: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">If there's still no purchase found, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+              lineB: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">If there's still no purchase found, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+            },
+            {
+              lineA: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">Please wait a moment and try again. If the problem persists, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+              lineB: `        <p className="mt-6 text-base text-gray-500 leading-relaxed">Please wait a moment and try again. If the problem persists, please <a className="underline rounded hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400" href={'/' + HASH_SUPPORT} target="_blank" rel="noreferrer">contact us`,
+            },
+            {
+              lineA: `          <span className="text-sm text-gray-500 rounded group-focus:ring">{'<'} <span className="group-hover:underline">{safeAreaWidth < SM_WIDTH ? 'Settings / ' : ''}Subscription</span></span>`,
+              lineB: `          <span className="text-sm text-gray-500 rounded group-focus:ring-2 group-focus:ring-gray-400">{'<'} <span className="group-hover:underline">{safeAreaWidth < SM_WIDTH ? 'Settings / ' : ''}Subscription</span></span>`,
             },
           ],
         },
@@ -298,6 +330,98 @@ const srcRule = () => ([
           ],
         },
       },
+      {
+        name: 'PaywallPopup.js',
+        rule: {
+          name: SAME_FILE,
+          exclude: [
+            {
+              startLine: "  if (safeAreaWidth >= SM_WIDTH) spanStyle.height = safeAreaHeight;",
+              endLine: "  return (",
+            },
+            {
+              startLineA: '            <div className="mt-5 sm:mt-6 sm:flex sm:justify-center sm:items-center">',
+              endLineA: '            </div>',
+              startLineB: '            <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">',
+              endLineB: '            </div>',
+            },
+            {
+              lineA: '      <div className="fixed inset-0 overflow-y-auto z-40" aria-labelledby="modal-title" role="dialog" aria-modal="true">',
+              lineB: '      <div className="fixed inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">',
+            },
+            {
+              lineA: '              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100">',
+              lineB: '              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">',
+            },
+            {
+              lineA: '                <svg className="h-6 w-6 text-gray-600" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">',
+              lineB: '                <svg className="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">',
+            },
+          ],
+        },
+      },
+      {
+        name: 'PinErrorPopup.js',
+        rule: {
+          name: SAME_FILE,
+          exclude: [
+            {
+              lineA: "  PIN_LINK_ROLLBACK, UNPIN_LINK_ROLLBACK, MOVE_PINNED_LINK_ADD_STEP_ROLLBACK,",
+              lineB: "  PIN_NOTE_ROLLBACK, UNPIN_NOTE_ROLLBACK, MOVE_PINNED_NOTE_ROLLBACK,",
+            },
+            {
+              lineA: "        PIN_LINK_ROLLBACK, UNPIN_LINK_ROLLBACK, MOVE_PINNED_LINK_ADD_STEP_ROLLBACK,",
+              lineB: "        PIN_NOTE_ROLLBACK, UNPIN_NOTE_ROLLBACK, MOVE_PINNED_NOTE_ROLLBACK,",
+            },
+            {
+              lineA: '    <div className="fixed top-14 inset-x-0 flex justify-center items-start z-40 md:top-0">',
+              lineB: '    <div className="fixed top-14 inset-x-0 flex justify-center items-start md:top-0">',
+            },
+          ],
+        },
+      },
+      {
+        name: 'PinMenuPopup.js',
+        rule: {
+          name: SAME_FILE,
+          exclude: [
+            {
+              startLineA: "import { updatePopup, unpinLinks, movePinnedLink } from '../actions';",
+              endLineA: "} from '../types/const';",
+              startLineB: "import { updatePopup, unpinNotes, movePinnedNote } from '../actions';",
+              endLineB: "} from '../types/const';",
+            },
+            {
+              lineA: "  const selectingLinkId = useSelector(state => state.display.selectingLinkId);",
+              lineB: "  const selectingNoteId = useSelector(state => state.display.selectingNoteId);",
+            },
+            {
+              lineA: "  const layoutType = useSelector(state => state.localSettings.layoutType);",
+              lineB: "",
+            },
+            {
+              startLine: "    onCancelBtnClick();",
+              endLine: "      console.log(`In PinMenuPopup, invalid text: ${text}`);",
+            },
+            {
+              startLine: '    <AnimatePresence key="AP_pinMenuPopup" />',
+              endLine: '  const buttons = (',
+            },
+            {
+              lineA: '        return <button key={text} onClick={() => onMenuPopupClick(text)} className="py-2.5 pl-4 pr-4 block w-full text-sm text-gray-700 text-left truncate rounded-md hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring focus:ring-inset" role="menuitem">{text}</button>',
+              lineB: '        return <button key={text} onClick={() => onMenuPopupClick(text)} className="py-2.5 pl-4 pr-4 block w-full text-sm text-gray-700 text-left truncate rounded-md hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 focus:ring-inset" role="menuitem">{text}</button>',
+            },
+            {
+              lineA: "  let popupClassNames = 'pb-1 fixed min-w-32 max-w-64 bg-white rounded-lg shadow-xl overflow-auto ring-1 ring-black ring-opacity-5 z-41';",
+              lineB: "  let popupClassNames = 'pb-1 fixed min-w-32 max-w-64 bg-white rounded-lg shadow-xl overflow-auto ring-1 ring-black ring-opacity-5';",
+            },
+            {
+              lineA: '      <motion.button key="PMP_cancelBtn" ref={cancelBtn} onClick={onCancelBtnClick} className="fixed inset-0 w-full h-full bg-black bg-opacity-25 cursor-default z-40 focus:outline-none" variants={popupBgFMV} initial="hidden" animate="visible" exit="hidden" />',
+              lineB: '      <motion.button key="PMP_cancelBtn" ref={cancelBtn} onClick={onCancelBtnClick} className="fixed inset-0 w-full h-full bg-black bg-opacity-25 cursor-default focus:outline-none" variants={popupBgFMV} initial="hidden" animate="visible" exit="hidden" />',
+            },
+          ],
+        },
+      },
       { name: '*', rule: IGNORE },
     ],
   },
@@ -394,9 +518,25 @@ const srcRule = () => ([
           ]
         },
       },
-      { nameA: 'index.js', nameB: 'obj.js', rule: SAME_FUNC },
+      { nameA: 'obj.js', nameB: 'obj.js', rule: SAME_FILE },
       { name: 'index-web.js', rule: IGNORE },
     ],
+  },
+  {
+    name: 'vars.js',
+    rule: {
+      name: SAME_FILE,
+      exclude: [
+        {
+          lineA: "  doExtractContents: false,",
+          lineB: "  doDeleteOldNotesInTrash: false,",
+        },
+        {
+          lineA: "  doDeleteOldLinksInTrash: false,",
+          lineB: "  sortOn: false,",
+        },
+      ],
+    },
   },
   { name: '*', rule: IGNORE },
 ]);

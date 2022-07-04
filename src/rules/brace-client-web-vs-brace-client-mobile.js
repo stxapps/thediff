@@ -98,9 +98,11 @@ const srcRule = () => ([
     name: 'utils',
     rule: [
       { name: 'index.js', rule: SAME_FILE },
+      { name: 'obj.js', rule: SAME_FILE },
       { name: 'cache.js', rule: IGNORE },
     ],
   },
+  { name: 'vars.js', rule: SAME_FILE },
   { name: '*', rule: IGNORE },
 ]);
 
@@ -108,18 +110,40 @@ const actionsIndexJsRule = () => ({
   name: SAME_FILE,
   exclude: [
     {
-      startLineA: "import { RESET_STATE as OFFLINE_RESET_STATE } from '@redux-offline/redux-offline/lib/constants';",
-      endLineA: "export const updatePopup = (id, isShown, anchorPosition = null) => {",
+      startLineA: "// A first line mark for theDiff",
+      endLineA: "  // Stop show loading",
       startLineB: "import { Linking, AppState, Platform } from 'react-native';",
-      endLineB: "export const updatePopup = (id, isShown, anchorPosition = null) => {",
+      endLineB: "  // Stop show loading",
     },
     {
-      lineA: "  const pageYOffset = window.pageYOffset;",
-      lineB: "  const pageYOffset = getState().window.pageYOffset;",
+      startLineA: "  return getPopupShownId(state) !== null;",
+      endLineA: "export const updateStacksAccess = (data) => {",
+      startLineB: "  return getPopupShownId(state) !== null;",
+      endLineB: "export const updateStacksAccess = (data) => {",
+    },
+    {
+      lineA: "",
+      lineB: "let _lastFetchDT = 0;",
+    },
+    {
+      startLine: "        rollback: { type: FETCH_ROLLBACK },",
+      endLine: "export const tryUpdateFetched = (payload, meta) => async (dispatch, getState) => {",
+    },
+    {
+      lineA: "    const pageYOffset = window.pageYOffset;",
+      lineB: "    const pageYOffset = getState().scrollPanel.pageYOffset;",
+    },
+    {
+      startLine: "    dispatch(updateFetchedMore(payload, meta));",
+      endLine: "    if (windowBottom > (scrollHeight * 0.96) && !isPopupShown(getState())) {",
     },
     {
       lineA: "",
       lineB: "      { headers: { Referer: DOMAIN_NAME } }",
+    },
+    {
+      lineA: "  const pageYOffset = window.pageYOffset;",
+      lineB: "  const pageYOffset = getState().scrollPanel.pageYOffset;",
     },
     {
       startLineA: "const importAllDataLoop = async (dispatch, fpaths, contents) => {",
@@ -128,10 +152,30 @@ const actionsIndexJsRule = () => ({
       endLineB: "export const updateImportAllDataProgress = (progress) => {",
     },
     {
-      startLineA: "const exportAllDataLoop = async (dispatch, fPaths, doneCount) => {",
+      startLineA: "const exportAllDataLoop = async (dispatch, fpaths, doneCount) => {",
       endLineA: "export const updateExportAllDataProgress = (progress) => {",
       startLineB: "export const exportAllData = () => async (dispatch, getState) => {",
       endLineB: "export const updateExportAllDataProgress = (progress) => {",
+    },
+    {
+      startLine: "    type: UPDATE_DELETE_ALL_DATA_PROGRESS,",
+      endLine: "const getIapStatus = async (doForce) => {",
+    },
+    {
+      lineA: "  const sigObj = userSession.signECDSA(SIGNED_TEST_STRING);",
+      lineB: "  const sigObj = await userSession.signECDSA(SIGNED_TEST_STRING);",
+    },
+    {
+      lineA: "",
+      lineB: "    { headers: { Referer: DOMAIN_NAME } }",
+    },
+    {
+      startLine: "    console.log('Error when contact IAP server to get purchases: ', error);",
+      endLine: "export const restorePurchases = () => async (dispatch, getState) => {",
+    },
+    {
+      startLine: "    doCheck = p > Math.random();",
+      endLine: "export const updateIapPublicKey = () => async (dispatch, getState) => {",
     },
   ],
 });
